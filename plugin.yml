@@ -1,6 +1,6 @@
 name: SkyBlock
 version: 2.0.1
-api: [1.13.0]
+api: [2.0.0]
 main: SkyBlock\Main
 commands:
   is:
