@@ -67,14 +67,10 @@ class Main extends Base implements Listener{
 				}elseif($args[0] == "create"){
 					if($sender->hasPermission("is") || $sender->hasPermission("is.command") || $sender->hasPermission("is.command.create")){
 						$senderIs = $this->getDataFolder()."Islands/".$sender->getName().".yml";
-						if($sender->getLevel()->getName() == "world"){
-							$sender->sendMessage(TextFormat::YELLOW."You can't make an island in spawn, silly");
-							return true;
-						}elseif($sender->getLevel()->getName() == "PvP"){
-							$sender->sendMessage(TextFormat::YELLOW . "You can't make an island in PvP, silly");
-							return true;
-						}elseif($sender->getLevel()->getName() == "Parkour"){
-							$sender->sendMessage(TextFormat::YELLOW."You can't make an island in Parkour, silly");
+						$playerLevel = $sender->getLevel()->getName();
+						$skyblockWorlds = $this->getConfig()->get("Worlds");
+						if(!(in_array($playerLevel, $skyblockWorlds))){
+							$sender->sendMessage("You aren't in a skyblock world!");
 							return true;
 						}else{
 							if(!(file_exists($senderIs))){
@@ -448,6 +444,13 @@ class Main extends Base implements Listener{
 			
 			// Chest
 			$player->getInventory()->addItem(Item::get("54"));
+			
+			// Bones
+			$player->getInventory()->addItem(Item::get("352"));
+			$player->getInventory()->addItem(Item::get("352"));
+			$player->getInventory()->addItem(Item::get("352"));
+			$player->getInventory()->addItem(Item::get("352"));
+			$player->getInventory()->addItem(Item::get("352"));
 			
 			$this->getLogger()->info($name . TextFormat::YELLOW . " made an island");
 		}
