@@ -34,4 +34,9 @@ permissions:
           is.command.home:
             default: true
             description: Allows the player to teleport to their island
-        
+          is.command.add:
+            default: true
+            description: Allows the player to add other players to their island
+          is.command.remove:
+            default: true
+            description: Allows the player to remove other players to their island
