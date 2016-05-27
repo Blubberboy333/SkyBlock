@@ -200,6 +200,79 @@ class Main extends Base implements Listener{
 							$sender->sendMessage("You don't have permission to set your home");
 							return true;
 						}
+					}elseif($args[0] == "add"){
+						if($sender->hasPermission("is") || $sender->hasPermission("is.command") || $sender->hasPermission("is.command.add")){
+							if(!(isset($args[1]))){
+								$sender->sendMessage(TextFormat::YELLOW."You need to specify a player!");
+							}else{
+								$player = $this->getServer()->getPlayer($args[1]);
+								if($player instanceof Player){
+									if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
+										$sender->sendMessage(TextFormat::YELLOW."That player already has an island!");
+										$player->sendMessage(TextFormat::YELLOW.$sender->getName()." wants to add you to their island, but you already have one!");
+										$player->sendMessage(TextFormat::YELLOW."Use /is delete to delete yous island if you want to join their island");
+										return true;
+									}else{
+										$sender->sendMessage(TextFormat::GREEN."Adding ".$player->getName()." to your island...");
+										$player->sendMessage(TextFormat::BLUE.$sender->getName()." added you to their island!");
+										$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." added ".$player->getName()." to their island!");
+										$newFile = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
+										$isFile = new Config($this->getDataFolder()."ISlands/".$sender->getName().".yml", Config::YAML);
+										$newFile->set("X", $isFile->get("X"));
+										$newFile->set("Y", $isFile->get("Y"));
+										$newFile->set("Z", $isFile->get("Z"));
+										$newFile->set("World", $isFile->get("World"));
+										$newFile->set("Owner", $sender->getName());
+										$newFile->save();
+										$player->sendMessage(TextFormat::BLUE."Use /is home to go to your island!");
+									}
+								}
+							}
+						}else{
+							$sender->sendMessage(TextFormat::RED."You don't have permission to do that!");
+							return true;
+						}
+					}elseif($args[0] == "remove"){
+						if($sender->hasPermission("is") || $sender->hasPermission("is.command") || $sender->hasPermission("is.command.remove")){
+							if(!(isset($args[1])){
+								$sender->sendMessage(TextFormat::YELLOW."You need to spicify a player!");
+								return true;
+							}else{
+								$player = $this->getServer()->getPlayer($args[1]);
+								if($player instanceof Player){
+									if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
+										$file = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
+										if(isset($file->get("Owner"))){
+											if($file->get("Owner") == $sender->getName()){
+												$sender->sendMessage(TextFormaat::YELLOW."Removed ".$player->getName()." from your island");
+												$player->sendMessage(TextFormat::YELLOW."You have been removed from "$sender->getName()."'s island");
+												$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." removed ".$player->getName()." from their island");
+												if($file->get("World") == $player->getLevel()->getName()){
+													$spawn = $this->getServer()->getLevelByName($player->getLevel()->getName())->getSafeSpawn();
+													$player->teleport($spawn);
+												}
+												unlink($this->getDataFolder()."Islands/".$player->getName().".yml");
+											}else{
+												$sender->sendMessage(TextFormat::YELLOW."That player isn't on your island!");
+												return true;
+											}
+										}else{
+											$sender->sendMessage(TextFormat::YELLOW."That player owns his/her own island!");
+											return true;
+										}
+									}else{
+										$sender->sendMessage(TextFormat::YELLOW."That player doesn't have an island!");
+										return true;
+									}
+								}else{
+									$sender->sendMessage($args[1]." isn't online!");
+									return true;
+								}
+							}
+						}else{
+							$sender->sendMessage(TextFormat::RED."You don't have permission to do that!");
+							return true;
+						}
 					}
 				}
 			}
