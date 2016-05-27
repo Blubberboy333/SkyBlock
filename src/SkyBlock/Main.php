@@ -49,15 +49,19 @@ class Main extends Base implements Listener{
 				if($args[0] == "help"){
 					if($sender->hasPermission("is") || $sender->hasPermission("is.help")){
 						if(!(isset($args[1])) or $args[1] == "1"){
-							$sender->sendMessage(TextFormat::GREEN . "Showing help page 1 of 1");
+							$sender->sendMessage(TextFormat::BLUE . "Showing help page 1 of 1");
 							$sender->sendMessage(TextFormat::GREEN . "/is help");
 							$sender->sendMessage(TextFormat::GREEN . "/is create");
 							$sender->sendMessage(TextFormat::GREEN . "/is home");
 							$sender->sendMessage(TextFormat::GREEN . "/is sethome");
-							$sender->sendMessage(TextFormat::GREEN . "/is find");
+							$sender->sendMessage(TextFormat::BLUE . "Use /is help 2 to view the second page");
 							return true;
 						}elseif($args[1] == "2"){
-							$sender->sendMessage("More commands coming soon");
+							$sender->sendMessage(TextFormat::BLUE."Showing help page 2 of 2");
+							$sender->sendMessage(TextFormat::GREEN."/is find");
+							$sender->sendMessage(TextFormat::GREEN."/is add");
+							$sender->sendMessage(TextFormat::GREEN."/is remove");
+							$sender->sendMessage(TextFormat::BLUE."End of command list");
 							return true;
 						}
 					}else{
@@ -205,27 +209,31 @@ class Main extends Base implements Listener{
 							if(!(isset($args[1]))){
 								$sender->sendMessage(TextFormat::YELLOW."You need to specify a player!");
 							}else{
-								$player = $this->getServer()->getPlayer($args[1]);
-								if($player instanceof Player){
-									if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
-										$sender->sendMessage(TextFormat::YELLOW."That player already has an island!");
-										$player->sendMessage(TextFormat::YELLOW.$sender->getName()." wants to add you to their island, but you already have one!");
-										$player->sendMessage(TextFormat::YELLOW."Use /is delete to delete yous island if you want to join their island");
-										return true;
-									}else{
-										$sender->sendMessage(TextFormat::GREEN."Adding ".$player->getName()." to your island...");
-										$player->sendMessage(TextFormat::BLUE.$sender->getName()." added you to their island!");
-										$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." added ".$player->getName()." to their island!");
-										$newFile = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
-										$isFile = new Config($this->getDataFolder()."ISlands/".$sender->getName().".yml", Config::YAML);
-										$newFile->set("X", $isFile->get("X"));
-										$newFile->set("Y", $isFile->get("Y"));
-										$newFile->set("Z", $isFile->get("Z"));
-										$newFile->set("World", $isFile->get("World"));
-										$newFile->set("Owner", $sender->getName());
-										$newFile->save();
-										$player->sendMessage(TextFormat::BLUE."Use /is home to go to your island!");
+								if(file_exists($this->getDataFolder()."Islands/".$sender->getName().".yml")){
+									$player = $this->getServer()->getPlayer($args[1]);
+									if($player instanceof Player){
+										if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
+											$sender->sendMessage(TextFormat::YELLOW."That player already has an island!");
+											$player->sendMessage(TextFormat::YELLOW.$sender->getName()." wants to add you to their island, but you already have one!");
+											$player->sendMessage(TextFormat::YELLOW."Use /is delete to delete yous island if you want to join their island");
+											return true;
+										}else{
+											$sender->sendMessage(TextFormat::GREEN."Adding ".$player->getName()." to your island...");
+											$player->sendMessage(TextFormat::BLUE.$sender->getName()." added you to their island!");
+											$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." added ".$player->getName()." to their island!");
+											$newFile = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
+											$isFile = new Config($this->getDataFolder()."ISlands/".$sender->getName().".yml", Config::YAML);
+											$newFile->set("X", $isFile->get("X"));
+											$newFile->set("Y", $isFile->get("Y"));
+											$newFile->set("Z", $isFile->get("Z"));
+											$newFile->set("World", $isFile->get("World"));
+											$newFile->set("Owner", $sender->getName());
+											$newFile->save();
+											$player->sendMessage(TextFormat::BLUE."Use /is home to go to your island!");
+										}
 									}
+								}else{
+									$sender->sendMessage(TextFormat::YELLOW."You don't have an island! Use /is create to make one!");
 								}
 							}
 						}else{
@@ -240,28 +248,33 @@ class Main extends Base implements Listener{
 							}else{
 								$player = $this->getServer()->getPlayer($args[1]);
 								if($player instanceof Player){
-									if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
-										$file = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
-										if(isset($file->get("Owner"))){
-											if($file->get("Owner") == $sender->getName()){
-												$sender->sendMessage(TextFormaat::YELLOW."Removed ".$player->getName()." from your island");
-												$player->sendMessage(TextFormat::YELLOW."You have been removed from "$sender->getName()."'s island");
-												$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." removed ".$player->getName()." from their island");
-												if($file->get("World") == $player->getLevel()->getName()){
-													$spawn = $this->getServer()->getLevelByName($player->getLevel()->getName())->getSafeSpawn();
-													$player->teleport($spawn);
+									if(file_exists($this->getDataFolder()."Islands/".$sender->getName().".yml"){
+										if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
+											$file = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
+											if(isset($file->get("Owner"))){
+												if($file->get("Owner") == $sender->getName()){
+													$sender->sendMessage(TextFormaat::YELLOW."Removed ".$player->getName()." from your island");
+													$player->sendMessage(TextFormat::YELLOW."You have been removed from "$sender->getName()."'s island");
+													$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." removed ".$player->getName()." from their island");
+													if($file->get("World") == $player->getLevel()->getName()){
+														$spawn = $this->getServer()->getLevelByName($player->getLevel()->getName())->getSafeSpawn();
+														$player->teleport($spawn);
 												}
 												unlink($this->getDataFolder()."Islands/".$player->getName().".yml");
+												}else{
+													$sender->sendMessage(TextFormat::YELLOW."That player isn't on your island!");
+													return true;
+												}
 											}else{
-												$sender->sendMessage(TextFormat::YELLOW."That player isn't on your island!");
+												$sender->sendMessage(TextFormat::YELLOW."That player owns his/her own island!");
 												return true;
 											}
 										}else{
-											$sender->sendMessage(TextFormat::YELLOW."That player owns his/her own island!");
+											$sender->sendMessage(TextFormat::YELLOW."That player doesn't have an island!");
 											return true;
 										}
 									}else{
-										$sender->sendMessage(TextFormat::YELLOW."That player doesn't have an island!");
+										$sender->sendMessage(TextFormat::YELLOW."You don't have an island! Use /is create to make one!");
 										return true;
 									}
 								}else{
