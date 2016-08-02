@@ -242,19 +242,19 @@ class Main extends Base implements Listener{
 						}
 					}elseif($args[0] == "remove"){
 						if($sender->hasPermission("is") || $sender->hasPermission("is.command") || $sender->hasPermission("is.command.remove")){
-							if(!(isset($args[1])){
-								$sender->sendMessage(TextFormat::YELLOW."You need to spicify a player!");
+							if(!(isset($args[1]))){
+								$sender->sendMessage(TextFormat::YELLOW."You need to specify a player!");
 								return true;
 							}else{
 								$player = $this->getServer()->getPlayer($args[1]);
 								if($player instanceof Player){
-									if(file_exists($this->getDataFolder()."Islands/".$sender->getName().".yml"){
+									if(file_exists($this->getDataFolder()."Islands/".$sender->getName().".yml")){
 										if(file_exists($this->getDataFolder()."Islands/".$player->getName().".yml")){
 											$file = new Config($this->getDataFolder()."Islands/".$player->getName().".yml", Config::YAML);
-											if(isset($file->get("Owner"))){
+											if(null !==($file->get("Owner"))){
 												if($file->get("Owner") == $sender->getName()){
-													$sender->sendMessage(TextFormaat::YELLOW."Removed ".$player->getName()." from your island");
-													$player->sendMessage(TextFormat::YELLOW."You have been removed from "$sender->getName()."'s island");
+													$sender->sendMessage(TextFormat::YELLOW."Removed ".$player->getName()." from your island");
+													$player->sendMessage(TextFormat::YELLOW."You have been removed from ".$sender->getName()."'s island");
 													$this->getLogger()->info(TextFormat::YELLOW.$sender->getName()." removed ".$player->getName()." from their island");
 													if($file->get("World") == $player->getLevel()->getName()){
 														$spawn = $this->getServer()->getLevelByName($player->getLevel()->getName())->getSafeSpawn();
