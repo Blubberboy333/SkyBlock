@@ -1,6 +1,6 @@
 name: SkyBlock
-version: 2.0.1
-api: [2.0.0]
+version: 2.0.2
+api: [3.0.0, 3.0.0-ALPHA1, 3.0.0-ALPHA2, 3.0.0-ALPHA3, 3.0.0-ALPHA4, 3.0.0-ALPHA5, 3.0.0-ALPHA6, 3.0.0-ALPHA7, 3.0.0-ALPHA8, 3.0.0-ALPHA9, 3.0.0-ALPHA10, 3.0.0-ALPHA11, 3.0.0-ALPHA12, 3.0.0-ALPHA13, 3.0.0-ALPHA14, 3.0.0-ALPHA15, 3.0.0-ALPHA16, 3.0.0-ALPHA17, 3.0.0-ALPHA18, 3.0.0-ALPHA19, 3.0.0-ALPHA20, 3.0.0-ALPHA21, 3.0.0-ALPHA22, 3.0.0-ALPHA23, 3.0.0-ALPHA24, 3.0.0-FUCKPMMP, 4.0.0, 4.0.0-ALPHA1]
 main: SkyBlock\Main
 commands:
   is:
@@ -22,8 +22,8 @@ permissions:
           is.command.create:
             default: true
             description: Allows the player to use the create command
-          is.command.find:
-            default: op
+          is.command.tp:
+            default: true
             description: Allows the player to use the home command
           is.command.delete:
             default: true
@@ -40,3 +40,9 @@ permissions:
           is.command.remove:
             default: true
             description: Allows the player to remove other players to their island
+          is.command.access
+            default: true
+            description: Allowes the island owner to give people access to tp to the island
+          is.command.protect
+            default: true
+            description: Allows the island owner to make the island destroyable by everyone on the server/protect the island
